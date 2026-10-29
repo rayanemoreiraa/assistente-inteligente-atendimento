@@ -1,39 +1,73 @@
 # Assistente Inteligente de Atendimento
 
-Um assistente desenvolvido em Python para responder a dúvidas comuns de atendimento, utilizando uma interface de conversa e integração opcional com inteligência artificial.
+Protótipo de portfólio feito com Python e Streamlit. O aplicativo reconhece dúvidas comuns e sugere próximos passos usando regras locais, sem exigir uma chave de API ou pagamento.
 
-A ideia é explorar como a tecnologia pode ajudar a tornar o atendimento mais rápido, organizado e eficiente.
+## O que o projeto demonstra
 
-## Funcionalidades
+- Interface de chat com Streamlit.
+- Reconhecimento de temas: entrega, reembolso, pedido com problema, cancelamento, acesso à conta e pedido de atendimento humano.
+- Normalização de texto para reconhecer variações com ou sem acentos.
+- Priorização do pedido de atendimento humano quando ele aparece junto de outro problema.
+- Respostas transparentes para mensagens que o protótipo não reconhece.
+- Testes automatizados das principais regras.
+- Avisos de privacidade e limites do protótipo.
 
-- Interface de conversa para envio de perguntas.
-- Respostas para dúvidas sobre entregas, reembolsos e acesso a contas.
-- Integração opcional com uma API de inteligência artificial.
-- Orientações para situações em que faltam informações.
+## Limites e privacidade
 
-## Tecnologias utilizadas
+Este é um protótipo educacional independente. Não representa uma empresa específica, não consulta pedidos, pagamentos ou contas reais e não transfere conversas para atendentes. Não insira senhas, códigos de autenticação, dados bancários ou documentos pessoais.
 
-- Python
-- Streamlit
-- API de inteligência artificial
-- GitHub
+## Executar localmente
 
-## Como executar o projeto
+Requer Python 3.10 ou superior.
 
-### 1. Instale as dependências
+```bash
+python -m venv .venv
+```
+
+No Windows:
+
+```powershell
+.venv\Scripts\activate
+```
+
+No macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Instale e execute:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Execute o aplicativo
-
-```bash
 streamlit run app.py
 ```
 
-O aplicativo pode ser utilizado em modo de demonstração sem uma chave de API. Para gerar respostas com inteligência artificial, é necessário configurar a integração.
+## Executar os testes
 
-## Sobre o projeto
+```bash
+python -m unittest test_assistant_logic -v
+```
 
-Este projeto faz parte dos meus estudos em Tecnologia em Dados e do meu interesse por Python, inteligência artificial e automação. A proposta é colocar esses conhecimentos em prática por meio de uma solução que explore novas possibilidades para o atendimento digital.
+## Cenários de teste manuais
+
+| Cenário | Entrada de exemplo | Comportamento esperado |
+|---|---|---|
+| Entrega | “Minha entrega está atrasada” | Orienta a consultar o canal oficial e o status |
+| Reembolso | “Meu reembolso não caiu” | Orienta a consultar a solicitação e procurar suporte |
+| Pedido com problema | “Meu pedido veio incompleto” | Orienta a descrever o problema no canal oficial |
+| Cancelamento | “Quero cancelar meu pedido” | Explica que deve verificar as opções oficiais |
+| Acesso | “Esqueci minha senha” | Recomenda recuperação oficial e protege códigos |
+| Atendimento humano | “Quero falar com uma pessoa de verdade” | Reconhece a intenção e explica que não transfere a conversa |
+| Mensagem desconhecida | “Qual é a previsão do tempo?” | Não inventa uma resposta; pede que a pessoa escolha um tema suportado |
+
+## Tecnologias
+
+Python • Streamlit • unittest • Git • GitHub
+
+## Próximas evoluções possíveis
+
+- Conectar uma base de conhecimento validada.
+- Integrar um provedor de IA, se houver orçamento e necessidade.
+- Criar transferência real para atendimento humano por meio de um sistema autorizado.
+- Adicionar métricas agregadas sem guardar dados pessoais.
