@@ -1,4 +1,5 @@
 import os
+import unicodedata
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -59,16 +60,40 @@ INTENTS = [
     },
     {
         "name": "Falar com uma pessoa",
-        "keywords": ["atendente", "pessoa real", "humano", "falar com alguém", "falar com alguem", "suporte humano", "reclamar com atendente"],
+        "keywords": [
+            "atendente", "pessoa real", "pessoa de verdade", "falar com uma pessoa",
+            "falar com uma pessoa de verdade", "quero falar com alguem", "quero falar com alguém",
+            "falar com alguem", "falar com alguém", "humano", "suporte humano",
+            "atendimento humano", "quero um atendente", "nao consegui resolver",
+            "não consegui resolver", "ja tentei resolver", "já tentei resolver",
+            "falar com uma pessoa do suporte", "reclamar com atendente"
+        ],
         "reply": "Se você prefere falar com uma pessoa, procure as opções “Ajuda”, “Fale conosco” ou “Atendimento” no aplicativo ou site oficial da empresa. Se já tentou resolver o problema, tenha em mãos o protocolo anterior.\n\nEste protótipo não consegue transferir a conversa para um atendente real.",
     },
 ]
 
 
+def normalize_text(value: str) -> str:
+    """Padroniza texto para reconhecer frases com ou sem acentos."""
+    value = unicodedata.normalize("NFKD", value.lower())
+    value = "".join(char for char in value if not unicodedata.combining(char))
+    return " ".join(value.strip().split())
+
+
 def demo_reply(message: str) -> str:
-    text = " ".join(message.lower().strip().split())
+    text = normalize_text(message)
+
+    # Prioriza pedido de atendimento humano, mesmo quando a pessoa explica o problema.
+    human_intent = next(intent for intent in INTENTS if intent["name"] == "Falar com uma pessoa")
+    human_keywords = [normalize_text(keyword) for keyword in human_intent["keywords"]]
+    if any(keyword in text for keyword in human_keywords):
+        return human_intent["reply"]
+
     for intent in INTENTS:
-        if any(keyword in text for keyword in intent["keywords"]):
+        if intent["name"] == "Falar com uma pessoa":
+            continue
+        keywords = [normalize_text(keyword) for keyword in intent["keywords"]]
+        if any(keyword in text for keyword in keywords):
             return intent["reply"]
     return (
         "Quero ajudar você a encontrar o próximo passo. Para eu orientar melhor, conte um pouco mais sobre o problema.\n\n"
